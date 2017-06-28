@@ -3,24 +3,30 @@
 	// socket connection
 	const socket = io.connect();
 
-	setInterval(_ => {
-		socket.emit('chat message', 'Establishing Connection...');
-	}, 1000);
+	// device info
+	const device = {
+		id: Math.random().toString(36).substr(2, 4).toUpperCase(),
+		type: 'tv'
+	}
+	document.getElementById('code').innerText = device.id;
 
-	socket.on('connect', _=> {
-		console.log('connected');
+	// device type identification
+	socket.emit('identification', JSON.stringify(device));
+
+	socket.on('connect', _ => {
+		console.log('tv connected');
 	});
 
-	socket.on('reconnect', _=> {
-		console.log('reconnect');
+	socket.on('reconnect', _ => {
+		console.log('reconnecting tv');
 	});
 
 	socket.on('reconnect_attempt', num => {
-		console.log(num);
+		console.log('attempt', num);
 	});
 
-	socket.on('disconnect', _=> {
-		console.log('disconnected');
+	socket.on('disconnect', _ => {
+		console.log('tv disconnected');
 	});
 
 })();
