@@ -5,10 +5,23 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const PORT = process.env.PORT || 3000;
 
+// action when connected
 io.on('connection', socket => {
 
 	// acknowledgement
-	console.log('A user connected.');
+	console.log(`User ${socket.id} connected.`);
+
+	// tv functions
+	io.of('/tv').clients((err, cli) => {
+		if(err) throw err;
+		console.log('A tv is connected');
+	});
+
+	// remote functions
+	io.of('/remote').clients((err, cli) => {
+		if(err) throw err;
+		console.log('A remote is connected');
+	});
 
 	// incoming message
 	socket.on('chat message', msg => {
