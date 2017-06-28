@@ -14,15 +14,26 @@ io.on('connection', socket => {
 	// identification
 	socket.on('identification', device => {
 		device = JSON.parse(device);
-		console.log(`${device.type}#${device.id} connected.`);
+		socket.device = device;
 		if(device.type === 'tv') {
+			console.log(`${device.type}#${device.id} connected.`);
 			tvs[device.id] = socket;
 			socket.remotes = [];
 		}
 		if(device.type === 'remote') {
+			console.log(`${device.type}#${socket.id} connected.`);
 			remotes[socket.id] = socket;
 		}
 	});
+
+	// incoming commands
+	socket.on('cmd', cmd => {
+		if(!!remotes[socket.id]) {
+			Object.keys(tvs).forEach(id => {
+				tvs[id].emit('cmd', cmd);
+			});
+		}
+	})
 
 	// incoming message
 	socket.on('chat message', msg => {
@@ -31,7 +42,7 @@ io.on('connection', socket => {
 
 	// broken pipe
 	socket.on('disconnect', _ => {
-		console.log(`${device.type}#${device.id} disconnected.`);
+		console.log(`A device disconnected.`);
 	});
 
 });
