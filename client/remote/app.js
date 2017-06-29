@@ -1,7 +1,7 @@
 (_ => {
 
 	// socket connection
-	const socket = io.connect();
+	const socket = new io();
 
 	// device info
 	const device = {
