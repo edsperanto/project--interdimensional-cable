@@ -1,7 +1,7 @@
 (_ => {
 
 	// socket connection
-	const socket = new io();
+	var socket = new WebSocket('wss://www.edwardgao.com/projects/idc/api/');
 
 	// device info
 	const device = {
@@ -9,26 +9,21 @@
 		type: 'tv'
 	}
 
-	// connection
-	socket.on('connect', _ => {
-		console.log('tv connected');
-	});
-	socket.on('reconnect', _ => {
-		console.log('reconnecting tv');
-	});
-	socket.on('reconnect_attempt', num => {
-		console.log('attempt', num);
-	});
-	socket.on('disconnect', _ => {
-		console.log('tv disconnected');
+	// process incoming data stream
+	socket.addEventListener('message', msg => {
+
+		// parse incoming
+		data = JSON.parse(msg.data);
+
+		// identification
+		const identity = {action: 'identify', device};
+		if(data.action === 'identify') {
+			socket.send(JSON.stringify(identity));
+		}
+
 	});
 
-	// device type identification
-	socket.emit('identification', JSON.stringify(device));
-
-	// remote commands
-	socket.on('cmd', cmd => {
-		console.log('incoming', cmd);
+	socket.addEventListener('open', e => {
 	});
 
 })();

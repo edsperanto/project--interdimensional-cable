@@ -1,33 +1,42 @@
 (_ => {
 
 	// socket connection
-	const socket = new io();
+	var socket = new WebSocket('wss://www.edwardgao.com/projects/idc/api/');
 
 	// device info
 	const device = {
+		id: Math.random().toString(36).substr(2, 8).toUpperCase(),
 		type: 'remote'
 	}
 
-	// connection
-	socket.on('connect', _ => {
-		console.log('connected remote');
-	});
-	socket.on('reconnect', _ => {
-		console.log('reconnecting remote');
-	});
-	socket.on('reconnect_attempt', num => {
-		console.log('attempt', num);
-	});
-	socket.on('disconnect', _ => {
-		console.log('remote disconnected');
+	// process incoming data stream
+	socket.addEventListener('message', msg => {
+
+		// parse incoming
+		data = JSON.parse(msg.data);
+
+		// identification
+		const identity = {action: 'identify', device};
+		if(data.action === 'identify') {
+			socket.send(JSON.stringify(identity));
+		}
+
 	});
 
-	// device type identification
-	socket.emit('identification', JSON.stringify(device));
+	socket.addEventListener('open', e => {
 
-	// pseudo commands for testing
-	setInterval(_ => {
-		socket.emit('cmd', Math.random().toString(36).substr(2,7));
-	}, 1000);
+		// pseudo command
+		var command = {
+			action: 'cmd',
+			target: null,
+			cmd: Math.random().toString(36).substr(2, 20)
+		}
+
+		// send pseudo commands for testing
+		setInterval(_ => {
+			socket.send(JSON.stringify(command));
+		}, 1000);
+
+	});
 
 })();
