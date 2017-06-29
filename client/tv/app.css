@@ -1,15 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300');
+
 * {
-	left: 0;
-	top: 0;
-	margin: 0;
-	padding: 0;
-	border: 0;
+	top: 0; left: 0; bottom: 0; right: 0;
+	margin: 0; padding: 0; border: 0;
+	cursor: default;
+	user-select: none;
 	box-sizing: border-box;
 }
 
+html {
+	font-size: 25px;
+	font-family: 'Open Sans', Verdana, sans-serif;
+}
+
 iframe {
+	top: 2rem;
 	position: absolute;
-	left: 0;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 2rem);
+}
+
+div {
+	display: block;
+}
+
+#info {
+	width: 100%;
+	height: 2rem;
+	line-height: 2rem;
+	padding-left: 1rem;
+	background-color: DarkSeaGreen;
 }

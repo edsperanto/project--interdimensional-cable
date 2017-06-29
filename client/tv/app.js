@@ -1,5 +1,8 @@
 (_ => {
 
+	// DOM elements
+	const info = document.getElementById('info');
+
 	// socket connection
 	var socket = new WebSocket('wss://www.edwardgao.com/projects/idc/api/');
 
@@ -8,6 +11,7 @@
 		id: Math.random().toString(36).substr(2, 4).toUpperCase(),
 		type: 'tv'
 	}
+	info.innerText = device.id;
 
 	// process incoming data stream
 	socket.addEventListener('message', msg => {
